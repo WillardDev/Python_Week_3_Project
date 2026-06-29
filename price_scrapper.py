@@ -26,13 +26,11 @@ SOURCE_CURRENCY = "KES"
 TARGET_CURRENCY = "USD"
 
 def clean_price(price_text):
-    """Turn 'KSh 9,999' into 9999.0. Returns None if no digits found."""
     digits = re.sub(r"[^\d.]", "", price_text)
     return float(digits) if digits else None
 
 
 def fetch_exchange_rate(base, target):
-    """Fetch a fresh conversion rate. Returns None on any failure."""
     try:
         resp = requests.get(EXCHANGE_RATE_URL.format(base=base), timeout=10)
         resp.raise_for_status()
@@ -89,12 +87,7 @@ if soup is not None:
 print(f"Successfully parsed {len(products)} products")
 
 if not products:
-    print(
-        "No products parsed. Possible causes:\n"
-        "  - Jumia changed their markup (see troubleshooting block at the bottom)\n"
-        "  - The request was blocked (check the status code above)\n"
-        "  - Network/connection issue\n"
-    )
+    print("No products parsed!")
 
 exchange_rate = fetch_exchange_rate(SOURCE_CURRENCY, TARGET_CURRENCY) if products else None
 
